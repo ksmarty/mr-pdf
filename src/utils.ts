@@ -36,7 +36,7 @@ export async function generatePDF({
   disableTOC = false,
   coverSub,
 }: generatePDFOptions): Promise<Buffer> {
-  const browser = await chrome.puppeteer.launch(
+  const browser = await puppeteer.launch(
     puppeteerArgs ?? {
       args: chrome.args,
       executablePath: await chrome.executablePath,
