@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import puppeteer from 'puppeteer-core';
 import chrome from 'chrome-aws-lambda';
 
@@ -51,7 +50,7 @@ export async function generatePDF({
     // Create a list of HTML for the content section of all pages by looping
     while (nextPageURL) {
       console.log();
-      console.log(chalk.cyan(`Retrieving html from ${nextPageURL}`));
+      console.log(`Retrieving html from ${nextPageURL}`);
       console.log();
 
       // Go to the page specified by nextPageURL
@@ -85,10 +84,10 @@ export async function generatePDF({
 
       // Make joined content html
       if (excludeURLs && excludeURLs.includes(nextPageURL)) {
-        console.log(chalk.green('This URL is excluded.'));
+        console.log('This URL is excluded.');
       } else {
         contentHTML += html;
-        console.log(chalk.green('Success'));
+        console.log('Success');
       }
 
       // Find next page url before DOM operations

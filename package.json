@@ -14,9 +14,6 @@
   "engines": {
     "node": "^10.17.0 || >=11.14.0"
   },
-  "bin": {
-    "mr-pdf": "lib/cli.js"
-  },
   "keywords": [
     "pdf",
     "docusaurus",
@@ -28,9 +25,7 @@
   "author": "Kohhee Peace <kohheepeace@gmail.com> (http://github.com/kohheePeace)",
   "license": "MIT",
   "dependencies": {
-    "chalk": "^3.0.0",
     "chrome-aws-lambda": "5.4.0",
-    "commander": "^4.1.1",
     "puppeteer-core": "5.4.1"
   },
   "devDependencies": {
