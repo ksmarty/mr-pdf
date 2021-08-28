@@ -31,7 +31,7 @@
     "chalk": "^3.0.0",
     "chrome-aws-lambda": "7.0.0",
     "commander": "^4.1.1",
-    "puppeteer-core": "^10.2.0"
+    "puppeteer-core": "7.1.0"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0",
