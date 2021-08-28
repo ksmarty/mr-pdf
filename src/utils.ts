@@ -1,5 +1,6 @@
-import chalk = require('chalk');
-import puppeteer = require('puppeteer');
+import chalk from 'chalk';
+import puppeteer from 'puppeteer-core';
+import chrome from 'chrome-aws-lambda';
 
 let contentHTML = '';
 export interface generatePDFOptions {
@@ -9,7 +10,7 @@ export interface generatePDFOptions {
   pdfMargin?: puppeteer.PDFOptions['margin'];
   contentSelector: string;
   paginationSelector: string;
-  pdfFormat?: puppeteer.PDFFormat;
+  pdfFormat?: puppeteer.PDFOptions['format'];
   excludeSelectors?: Array<string>;
   cssStyle?: string;
   puppeteerArgs?: puppeteer.LaunchOptions;
@@ -35,7 +36,13 @@ export async function generatePDF({
   disableTOC = false,
   coverSub,
 }: generatePDFOptions): Promise<Buffer> {
-  const browser = await puppeteer.launch(puppeteerArgs);
+  const browser = await puppeteer.launch(
+    puppeteerArgs ?? {
+      args: chrome.args,
+      executablePath: await chrome.executablePath,
+      headless: chrome.headless,
+    },
+  );
   const page = await browser.newPage();
 
   for (const url of initialDocURLs) {
