@@ -47,11 +47,6 @@
     "lib/**/*",
     "bin/**/*"
   ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.{js,ts}": [
       "./node_modules/.bin/eslint --fix"
