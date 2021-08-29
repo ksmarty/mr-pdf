@@ -49,9 +49,7 @@ export async function generatePDF({
 
     // Create a list of HTML for the content section of all pages by looping
     while (nextPageURL) {
-      console.log();
-      console.log(`Retrieving html from ${nextPageURL}`);
-      console.log();
+      console.log(`\nRetrieving html from ${nextPageURL}\n`);
 
       // Go to the page specified by nextPageURL
       await page.goto(`${nextPageURL}`, {
