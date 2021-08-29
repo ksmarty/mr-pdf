@@ -29,21 +29,34 @@ export default async function (req, res) {
 
 ## 🍗 Options
 
-| Flag / Property                                                          | Default       | Required | Description                                                                                                     |
-| ------------------------------------------------------------------------ | ------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
-| `--initialDocURLs <urls>` <br/> `initialDocURLs: string[]`               | -             | **Yes**  | URL to start generating PDF from.                                                                               |
-| `--contentSelector <selector>` <br/> `contentSelector: string`           | -             | **Yes**  | CSS selector used to find the part of main content.                                                             |
-| `--paginationSelector <selector>` <br/> `paginationSelector: string`     | -             | **Yes**  | CSS selector used to find next page.                                                                            |
-| `--excludeURLs <urls>` <br/> `excludeURLs: string[]`                     | -             | No       | URLs to be excluded from PDF.                                                                                   |
-| `--excludeSelectors <selectors>` <br/> `excludeSelectors: string[]`      | -             | No       | Elements to be excluded. Separate selectors by comma **without spaces**. Spaces can be used inside selectors.   |
-| `--cssStyle <cssString>` <br/> `cssStyle: string`                        | -             | No       | CSS styles to modify the PDF. Project owners can also use `@media print { }` add CSS for the PDF.               |
-| `--outputPDFFilename <filename>` <br/> `outputPDFFilename: string`       | `mr-pdf.pdf`  | No       | Name of the PDF file.                                                                                           |
-| `--pdfMargin <margin>` <br/> `pdfMargin: puppeteer.PDFOptions['margin']` | `32,32,32,32` | No       | Margin around the PDF file. Separate values by comma **without spaces**.                                        |
-| `--pdfFormat <format>` <br/> `pdfFormat: puppeteer.PDFFormat`            | -             | No       | PDF format. [See options](https://www.puppeteersharp.com/api/PuppeteerSharp.Media.PaperFormat.html#properties). |
-| `--coverTitle <title>` <br/> `coverTitle: string`                        | -             | No       | Title for the PDF cover.                                                                                        |
-| `--coverSub <subtitle>` <br/> `coverSub: string`                         | -             | No       | Subtitle the for PDF cover. Add `<br/>` tags for multiple lines.                                                |
-| `--coverImage <src>` <br/> `coverImage: string`                          | -             | No       | URI to image for the PDF cover.                                                                                 |
-| `--disableTOC` <br/> `disableTOC: boolean`                               | -             | No       | Disable table of contents.                                                                                      |
+| Flag / Property                             | Default       | Required | Description                                                                                                     |
+| ------------------------------------------- | ------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
+| `initialDocURLs: string[]`                  | -             | **Yes**  | URL(s) to start generating PDF from.                                                                            |
+| `contentSelector: string`                   | -             | **Yes**  | CSS selector used to find the part of main content.                                                             |
+| `paginationSelector: string`                | -             | **Yes**  | CSS selector used to find next page. To only select one page, use a random word. E.g. "nope".                   |
+| `excludeURLs: string[]`                     | -             | No       | URL(s) to be excluded from PDF.                                                                                 |
+| `excludeSelectors: string[]`                | -             | No       | Element(s) to be excluded. Each element is its own selector.                                                    |
+| `cssStyle: string`                          | -             | No       | CSS styles to modify the PDF. Project owners can also use `@media print { }` add CSS for the PDF.               |
+| `outputPDFFilename: string`                 | `mr-pdf.pdf`  | No       | Name of the PDF file.                                                                                           |
+| `pdfMargin: puppeteer.PDFOptions['margin']` | `32,32,32,32` | No       | Margin around the PDF file. Separate values by comma **without spaces**.                                        |
+| `pdfFormat: puppeteer.PDFOptions['format']` | -             | No       | PDF format. [See options](https://www.puppeteersharp.com/api/PuppeteerSharp.Media.PaperFormat.html#properties). |
+| `puppeteerArgs: puppeteer.LaunchOptions`    | See Below     | No       | Options to set for the headless browser on launch. More info [here](#launch-options)                            |
+| `coverTitle: string`                        | -             | No       | Title for the PDF cover.                                                                                        |
+| `coverSub: string`                          | -             | No       | Subtitle the for PDF cover. Add `<br/>` tags for multiple lines.                                                |
+| `coverImage: string`                        | -             | No       | URI to image for the PDF cover.                                                                                 |
+| `disableTOC: boolean`                       | `false`       | No       | Disable table of contents.                                                                                      |
+
+## Launch Options
+
+The default settings are listed below. `chrome` refers to `chrome-aws-lambda`; a version of chrome intended for use in serverless applications. Version 7 of both `puppeteer` and `chrome-aws-lambda` are being used as they are just small enough to fit into AWS's requirements (Vercel uses AWS on the backend). See all available options [here](https://pptr.dev/#?product=Puppeteer&version=v7.0.1&show=api-puppeteerlaunchoptions)
+
+```js
+{
+  args: chrome.args,
+  executablePath: await chrome.executablePath,
+  headless: chrome.headless,
+}
+```
 
 ## CSS Classes
 
