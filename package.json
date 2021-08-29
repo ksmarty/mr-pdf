@@ -25,8 +25,8 @@
   "author": "Kohhee Peace <kohheepeace@gmail.com> (http://github.com/kohheePeace)",
   "license": "MIT",
   "dependencies": {
-    "chrome-aws-lambda": "5.4.0",
-    "puppeteer-core": "5.4.1"
+    "chrome-aws-lambda": "7.0.0",
+    "puppeteer-core": "7.1.0"
   },
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0",
