@@ -176,11 +176,13 @@ export async function generatePDF({
   }
 
   const file = await page.pdf({
-    path: outputPDFFilename,
+    path: `/tmp/${outputPDFFilename}`,
     format: pdfFormat,
     printBackground: true,
     margin: pdfMargin,
   });
+
+  console.log('File Created!');
 
   return file;
 }
