@@ -127,7 +127,11 @@ export async function generatePDF({
     "
   >
     ${coverTitle ? `<h1 class="cover-title">${coverTitle}</h1>` : ''}
-    ${coverSub ? `<h3 class="cover-subtitle">${coverSub}</h3>` : ''}
+    ${
+      coverSub
+        ? `<h3 class="cover-subtitle" style="font-weight: normal">${coverSub}</h3>`
+        : ''
+    }
     ${
       coverImage
         ? `<img class="cover-img" src="data:image/${
