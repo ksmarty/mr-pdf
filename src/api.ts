@@ -2,7 +2,6 @@ import { generatePDF, generatePDFOptions } from './utils';
 
 export default async function (options: generatePDFOptions) {
   const required = ['initialDocURLs', 'contentSelector', 'paginationSelector'];
-  console.log(options?.initialDocURLs);
   let missing: string[] = [];
   required.forEach(
     (key) =>

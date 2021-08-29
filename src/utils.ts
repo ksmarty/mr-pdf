@@ -160,15 +160,23 @@ export async function generatePDF({
   );
 
   // Remove unnecessary HTML by using excludeSelectors
-  excludeSelectors &&
-    excludeSelectors.map(async (excludeSelector) => {
-      // "selector" is equal to "excludeSelector"
-      // https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pageevaluatepagefunction-args
-      await page.evaluate((selector) => {
+  // excludeSelectors &&
+  //   excludeSelectors.map(async (excludeSelector) => {
+  //     // "selector" is equal to "excludeSelector"
+  //     // https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pageevaluatepagefunction-args
+  //     await page.evaluate((selector) => {
+  //       const matches = document.querySelectorAll(selector);
+  //       matches.forEach((match) => match.remove());
+  //     }, excludeSelector);
+  //   });
+
+  if (excludeSelectors)
+    await page.evaluate((selectors: string[]) => {
+      selectors.forEach((selector: string) => {
         const matches = document.querySelectorAll(selector);
         matches.forEach((match) => match.remove());
-      }, excludeSelector);
-    });
+      });
+    }, excludeSelectors);
 
   // Add CSS to HTML
   if (cssStyle) {
