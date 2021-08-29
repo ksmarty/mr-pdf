@@ -1,5 +1,5 @@
 {
-  "name": "mr-pdf",
+  "name": "pdf-press",
   "version": "1.0.0",
   "description": "Generate PDFs from documentation tools in serverless functions.",
   "main": "lib/api",
@@ -19,7 +19,7 @@
     "mkdocs",
     "gitbook"
   ],
-  "homepage": "https://github.com/ksmarty/mr-pdf",
+  "homepage": "https://github.com/ksmarty/pdf-press",
   "author": "Kyle Schwartz <kyleschwartz2000@gmail.com> (http://github.com/ksmarty)",
   "license": "MIT",
   "dependencies": {

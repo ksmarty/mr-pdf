@@ -1,21 +1,14 @@
-## 📌 Introduction
+## 📌 About
 
-This is a PDF generator from document website such as `docusaurus`, `vuepress`, `mkdocs`.
+This is a PDF generator from document website such as `docusaurus`, `vuepress`, and `mkdocs` built for serverless applications. The code is forked from [@KohheePeace](https://github.com/KohheePeace)'s [mr-pdf](https://github.com/KohheePeace/mr-pdf).
 
 ## ⚡ Usage
 
-### CLI
-
-```shell
-npx mr-pdf --initialDocsURL="https://example.com" --contentSelector="article" --paginationSelector="li > a"
-```
-
-### Module
 ```js
-import mrpdf from "mr-pdf";
+import pdf from "pdf-press";
 
 export default async function (req, res) {
-	const file = await mrpdf({
+	const file = await pdf({
 		initialDocURLs: ["https://example.com"],
 		contentSelector: "article",
 		paginationSelector: "li > a",
@@ -29,7 +22,7 @@ export default async function (req, res) {
 
 ## 🍗 Options
 
-| Flag / Property                             | Default                                        | Required | Description                                                                                                     |
+| Property                                    | Default                                        | Required | Description                                                                                                     |
 | ------------------------------------------- | ---------------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------- |
 | `initialDocURLs: string[]`                  | -                                              | **Yes**  | URL(s) to start generating PDF from.                                                                            |
 | `contentSelector: string`                   | -                                              | **Yes**  | CSS selector used to find the part of main content.                                                             |
@@ -37,7 +30,7 @@ export default async function (req, res) {
 | `excludeURLs: string[]`                     | -                                              | No       | URL(s) to be excluded from PDF.                                                                                 |
 | `excludeSelectors: string[]`                | -                                              | No       | Element(s) to be excluded. Each element is its own selector.                                                    |
 | `cssStyle: string`                          | -                                              | No       | CSS styles to modify the PDF. Project owners can also use `@media print { }` add CSS for the PDF.               |
-| `outputPDFFilename: string`                 | `mr-pdf.pdf`                                   | No       | Name of the PDF file.                                                                                           |
+| `outputPDFFilename: string`                 | `pdf-press.pdf`                                | No       | Name of the PDF file.                                                                                           |
 | `pdfMargin: puppeteer.PDFOptions['margin']` | `{ top: 32, right: 32, bottom: 32, left: 32 }` | No       | Margin around the PDF file.                                                                                     |
 | `pdfFormat: puppeteer.PDFOptions['format']` | -                                              | No       | PDF format. [See options](https://www.puppeteersharp.com/api/PuppeteerSharp.Media.PaperFormat.html#properties). |
 | `puppeteerArgs: puppeteer.LaunchOptions`    | See Below                                      | No       | Options to set for the headless browser on launch. More info [here](#launch-options)                            |
@@ -89,7 +82,7 @@ The structure for the cover page is as follows:
   </div>`
 ```
 
-
+<!-- 
 ## 🎨 Examples and Demo PDFs
 
 ### Docusaurus v1
@@ -159,16 +152,13 @@ https://squidfunk.github.io/mkdocs-material/
 `command`: 
 ```shell
 npx mr-pdf --initialDocsURL="https://squidfunk.github.io/mkdocs-material/getting-started/" --paginationSelector="a.md-footer-nav__link--next" --excludeSelectors="header.md-header,.announce,nav.md-tabs,.md-main__inner .md-sidebar--primary,.md-main__inner .md-sidebar--secondary,footer" --cssStyle=".md-content {max-width: 100%!important;}"
-```
-
-
-#### PR to add new docs is welcome here... 😸
+``` -->
 
 
 ## 📄 How this plugin works
 This plugin uses [puppeteer](https://github.com/puppeteer/puppeteer) to make PDF of the document website.
 
-![mr-pdf-diagram](https://user-images.githubusercontent.com/29557494/90359040-c8fb9780-e092-11ea-89c7-1868bc32919f.png)
+![diagram](https://user-images.githubusercontent.com/29557494/90359040-c8fb9780-e092-11ea-89c7-1868bc32919f.png)
 
 
 ## 🎉 Thanks
