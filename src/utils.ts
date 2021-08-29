@@ -44,6 +44,7 @@ export async function generatePDF({
   );
   const page = await browser.newPage();
 
+  // Iterate through the initial URLs
   for (const url of initialDocURLs) {
     let nextPageURL = url;
 
@@ -52,67 +53,80 @@ export async function generatePDF({
       console.log(`\nRetrieving html from ${nextPageURL}\n`);
 
       // Go to the page specified by nextPageURL
-      await page.goto(`${nextPageURL}`, {
+      await page.goto(nextPageURL, {
         waitUntil: 'networkidle0',
         timeout: 0,
       });
-      // Get the HTML string of the content section.
-      const html = await page.evaluate(
-        ({ contentSelector }) => {
-          const element: HTMLElement | null = document.querySelector(
-            contentSelector,
-          );
-          if (element) {
-            // Add pageBreak for PDF
-            element.style.pageBreakAfter = 'always';
 
-            // Open <details> tag
-            const detailsArray = element.getElementsByTagName('details');
-            Array.from(detailsArray).forEach((element) => {
-              element.open = true;
-            });
+      // If URL is not excluded, evaluate the page
+      if (!excludeURLs?.includes(nextPageURL)) {
+        contentHTML += await page.evaluate(
+          ({ contentSelector }) => {
+            /**
+             * Element containing the page content. Passed by the caller.
+             */
+            const content: HTMLElement | null =
+              document.querySelector(contentSelector);
 
-            return element.outerHTML;
-          } else {
-            return '';
-          }
-        },
-        { contentSelector },
-      );
+            if (content) {
+              // Enable page break for PDF
+              content.style.pageBreakAfter = 'always';
 
-      // Make joined content html
-      if (excludeURLs && excludeURLs.includes(nextPageURL)) {
-        console.log('This URL is excluded.');
-      } else {
-        contentHTML += html;
+              // Open each detail tag in the element
+              Array.from(content.getElementsByTagName('details')).forEach(
+                (detail) => (detail.open = true),
+              );
+            }
+
+            return content?.outerHTML ?? '';
+          },
+          { contentSelector },
+        );
+        // Page has been successfully evaluated
         console.log('Success');
-      }
+      } else console.log('This URL is excluded.');
+      // Otherwise, log that the page is excluded
 
       // Find next page url before DOM operations
-      nextPageURL = await page.evaluate((paginationSelector) => {
-        const element = document.querySelector(paginationSelector);
-        if (element) {
-          return (element as HTMLLinkElement).href;
-        } else {
-          return '';
-        }
+      nextPageURL = await page.evaluate((selector) => {
+        return (
+          (document.querySelector(selector) as HTMLLinkElement)?.href ?? ''
+        );
       }, paginationSelector);
     }
   }
 
-  // Download buffer of coverImage if exists
+  // Download buffer of coverImage if it exists
+  /**
+   * Base64 string representing the cover image
+   */
   let imgBase64 = '';
+  /**
+   * Whether the image is an SVG
+   */
   let isSVG = false;
   if (coverImage) {
+    // Get Image
     const imgSrc = await page.goto(coverImage);
-    isSVG = imgSrc?.headers()?.['content-type'] === 'image/svg+xml';
+
+    // Check if image is an SVG
+    isSVG =
+      imgSrc?.headers()?.['content-type'].toLocaleLowerCase() ===
+      'image/svg+xml';
+
+    // Convert image to buffer
     const imgSrcBuffer = await imgSrc?.buffer();
+
+    // Convert image to Base64
     imgBase64 = imgSrcBuffer?.toString('base64') || '';
   }
 
   // Go to initial page
-  await page.goto(`${initialDocURLs[0]}`, { waitUntil: 'networkidle0' });
+  await page.goto(initialDocURLs[0], { waitUntil: 'networkidle0' });
 
+  /**
+   * HTML for the cover page of the PDF.
+   */
   const coverHTML = `
   <div
     class="pdf-cover"
@@ -144,49 +158,35 @@ export async function generatePDF({
   // Add Toc
   const { modifiedContentHTML, tocHTML } = generateToc(contentHTML);
 
-  // Restructuring the html of a document
+  // Restructuring the content of the PDF
   await page.evaluate(
-    ({ coverHTML, tocHTML, modifiedContentHTML, disableTOC }) => {
-      // Empty body content
-      const body = document.body;
-      body.innerHTML = '';
-
-      // Add Cover
-      body.innerHTML += coverHTML;
-
-      // Add toc
-      if (!disableTOC) body.innerHTML += tocHTML;
-
-      // Add body content
-      body.innerHTML += modifiedContentHTML;
-    },
+    ({ coverHTML, tocHTML, modifiedContentHTML, disableTOC }) =>
+      (document.body.innerHTML = `${coverHTML}${
+        !disableTOC ? tocHTML : ''
+      }${modifiedContentHTML}`),
     { coverHTML, tocHTML, modifiedContentHTML, disableTOC },
   );
 
-  // Remove unnecessary HTML by using excludeSelectors
-  // excludeSelectors &&
-  //   excludeSelectors.map(async (excludeSelector) => {
-  //     // "selector" is equal to "excludeSelector"
-  //     // https://pptr.dev/#?product=Puppeteer&version=v5.2.1&show=api-pageevaluatepagefunction-args
-  //     await page.evaluate((selector) => {
-  //       const matches = document.querySelectorAll(selector);
-  //       matches.forEach((match) => match.remove());
-  //     }, excludeSelector);
-  //   });
-
+  // Remove elements provided by the caller
   if (excludeSelectors)
-    await page.evaluate((selectors: string[]) => {
-      selectors.forEach((selector: string) => {
-        const matches = document.querySelectorAll(selector);
-        matches.forEach((match) => match.remove());
-      });
-    }, excludeSelectors);
+    await page.evaluate(
+      (selectors: string[]) =>
+        selectors.forEach((selector: string) =>
+          document
+            .querySelectorAll(selector)
+            .forEach((match) => match.remove()),
+        ),
+      excludeSelectors,
+    );
 
   // Add CSS to HTML
-  if (cssStyle) {
-    await page.addStyleTag({ content: cssStyle });
-  }
+  if (cssStyle) await page.addStyleTag({ content: cssStyle });
 
+  /**
+   * The Final PDF
+   *
+   * The path is relative to the /tmp/ directory as this is where AWS allows us to store ephemeral data.
+   */
   const file = await page.pdf({
     path: `/tmp/${outputPDFFilename}`,
     format: pdfFormat,
@@ -200,11 +200,11 @@ export async function generatePDF({
 }
 
 function generateToc(contentHtml: string) {
-  const headers: Array<{
+  const headers: {
     header: string;
     level: number;
     id: string;
-  }> = [];
+  }[] = [];
 
   // Create TOC only for h1~h3
   const modifiedContentHTML = contentHtml.replace(
