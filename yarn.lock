@@ -328,20 +328,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mr-pdf@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "mr-pdf@workspace:."
-  dependencies:
-    "@tsconfig/node14": ^1.0.0
-    "@types/node": ^15.6.1
-    "@types/puppeteer": ^2.0.1
-    "@types/puppeteer-core": ^5.4.0
-    chrome-aws-lambda: 7.0.0
-    puppeteer-core: 7.0.0
-    typescript: ^3.8.3
-  languageName: unknown
-  linkType: soft
-
 "ms@npm:2.1.2, ms@npm:^2.1.1":
   version: 2.1.2
   resolution: "ms@npm:2.1.2"
@@ -403,6 +389,20 @@ __metadata:
   checksum: 060840f92cf8effa293bcc1bea81281bd7d363731d214cbe5c227df207c34cd727430f70c6037b5159c8a870b9157cba65e775446b0ab06fd5ecc7e54615a3b8
   languageName: node
   linkType: hard
+
+"pdf-press@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "pdf-press@workspace:."
+  dependencies:
+    "@tsconfig/node14": ^1.0.0
+    "@types/node": ^15.6.1
+    "@types/puppeteer": ^2.0.1
+    "@types/puppeteer-core": ^5.4.0
+    chrome-aws-lambda: 7.0.0
+    puppeteer-core: 7.0.0
+    typescript: ^3.8.3
+  languageName: unknown
+  linkType: soft
 
 "pend@npm:~1.2.0":
   version: 1.2.0
