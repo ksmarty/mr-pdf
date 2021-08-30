@@ -21,6 +21,7 @@
   ],
   "homepage": "https://github.com/ksmarty/pdf-press",
   "author": "Kyle Schwartz <kyleschwartz2000@gmail.com> (http://github.com/ksmarty)",
+  "repository": "ksmarty/pdf-press",
   "license": "MIT",
   "dependencies": {
     "chrome-aws-lambda": "7.0.0",
