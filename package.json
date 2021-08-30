@@ -1,6 +1,6 @@
 {
   "name": "pdf-press",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Generate PDFs from documentation tools in serverless functions.",
   "main": "lib/api",
   "types": "lib/types/api",
